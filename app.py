@@ -6,14 +6,24 @@
 
 from flask import Flask, request
 from flask_restful import Resource, Api, abort
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 
 app = Flask(__name__)
 api = Api(app)
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["1 per day"],
+)
 
 todos = {}
 
 
 class TodoSimple(Resource):
+
+    decorators = [ limiter.limit("1 per second", methods=['get'])]
 
     def get(self, todo_id=None):
         if todo_id:
