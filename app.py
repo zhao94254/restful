@@ -15,15 +15,23 @@ api = Api(app)
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["1 per day"],
+    default_limits=['1/day'],
 )
 
 todos = {}
 
+def special_limit():
+    tp =  request.args.get('type', None)
+    if tp == 'vip':
+        return '1/minute'
+    elif tp == 'svip':
+        return '1/second'
+    else:
+        return '1/day'
 
 class TodoSimple(Resource):
 
-    decorators = [ limiter.limit("1 per second", methods=['get'])]
+    decorators = [ limiter.limit(special_limit,per_method=True, methods=['get'])]
 
     def get(self, todo_id=None):
         if todo_id:
