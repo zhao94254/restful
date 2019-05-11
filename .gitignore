@@ -102,3 +102,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Rope project settings
+.ropeproject
+.idea
+.pyc
+
+# local development
+database.db
+*.db
+*.sqlite
