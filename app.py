@@ -10,8 +10,9 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import pymongo
 from pymongo.bulk import ObjectId
+from flask_httpauth import HTTPBasicAuth
 
-
+auth = HTTPBasicAuth()
 mongo_client = pymongo.MongoClient()
 app = Flask(__name__)
 api = Api(app)
@@ -58,9 +59,11 @@ class TodoSchema(APISchema):
 
 
 
+
+
 class Todo(Resource):
     schema = TodoSchema()
-    decorators = [ limiter.limit(special_limit,per_method=True, methods=['get'])]
+    decorators = [auth.login_required, limiter.limit(special_limit,per_method=True, methods=['get'])]
 
     @marshal_with(schema.todo_fields)
     def get(self):
