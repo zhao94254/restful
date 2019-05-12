@@ -1,0 +1,6 @@
+Flask==1.0.2
+pymongo==3.7.2
+requests==2.18.4
+Flask_Testing==0.7.1
+Flask_RESTful==0.3.7
+Flask_Limiter==1.0.1
