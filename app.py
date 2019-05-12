@@ -5,6 +5,7 @@
 # @file: app.py
 
 from flask import Flask, request
+from flask_login import current_user
 from flask_restful import Resource, Api, abort, reqparse, fields, marshal_with
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -58,6 +59,15 @@ class TodoSchema(APISchema):
     }
 
 
+@auth.verify_password
+def verify_password(user, password):
+    # check user
+
+    if user is None:
+        abort(404)
+    if mongo_client['test']['todouser'].find_one({'user': user, 'password': password}):
+        return True
+    return False
 
 
 
