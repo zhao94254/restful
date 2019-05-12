@@ -18,23 +18,24 @@ class ApiTest(unittest.TestCase):
 
 
     def test_todopost(self):
-        resp = requests.post(f'{burl}todo', data={'todo_id': 1,'data': 1})
+        resp = requests.post(f'{burl}todo', data={'user': 'test','data': 'test'})
         assert resp.status_code == 201
 
     def test_todoget(self):
-        resp = requests.get(f'{burl}todo')
+        resp = requests.get(f'{burl}todo?user=test&type=svip')
         assert resp.status_code == 200
-        resp = requests.get(f'{burl}todo/1')
         assert resp.status_code in (200, 404)
 
     def test_todoput(self):
         ndata = 'test'
-        resp = requests.put(f'{burl}todo/1', data={'data': ndata})
+        _id = requests.get(f'{burl}todo?user=test&type=svip').json()[0]['_id']
+        resp = requests.put(f'{burl}todo/{_id}', data={'data': ndata})
         assert resp.status_code == 200
         assert resp.json()['1'] == ndata
 
     def test_tododelete(self):
-        resp = requests.delete(f'{burl}todo/1')
+        _id = requests.get(f'{burl}todo?user=test&type=svip').json()[0]['_id']
+        resp = requests.delete(f'{burl}todo/{_id}')
         assert resp.status_code == 204
 
 
